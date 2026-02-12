@@ -45,14 +45,25 @@ model-viewer {
 }
 
 /* Style for the AR button that pops up */
-.ar-button {
-    background-color: #fff;
-    border-radius: 8px;
-    border: 1px solid #d35400;
-    padding: 10px 20px;
-    position: absolute;
-    bottom: 16px;
-    right: 16px;
+/* This forces the AR button to be visible and styled clearly */
+#ar-button {
+    display: block !important; 
+    background-color: #2ecc71;
+    color: white;
+    border-radius: 30px;
+    padding: 15px 25px;
     font-weight: bold;
-    color: #d35400;
+    border: none;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
 }
+
+/* If the device doesn't support AR, hide it gracefully */
+model-viewer:not([ar-status="not-present"]) #ar-button {
+    display: block;
+}
+}
+
