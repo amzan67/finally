@@ -1,27 +1,20 @@
 function updateMenu(modelFile, name, description, price) {
     const viewer = document.getElementById('main-viewer');
-    const nameElement = document.getElementById('item-name');
-    const descElement = document.getElementById('item-description');
-    const priceElement = document.getElementById('item-price');
-
-    // 1. Temporarily clear the source to prevent the "freeze"
+    
+    // 1. Kill the current rendering to prevent the freeze
     viewer.src = ""; 
 
-    // 2. Use a tiny timeout to let the browser breathe before loading the new item
+    // 2. Update the text details immediately
+    document.getElementById('item-name').innerText = name;
+    document.getElementById('item-description').innerText = description;
+    document.getElementById('item-price').innerText = price;
+
+    // 3. Wait 100ms for the browser to clear memory, then load the new model
     setTimeout(() => {
         viewer.setAttribute('src', modelFile);
-        nameElement.innerText = name;
-        descElement.innerText = description;
-        priceElement.innerText = price;
         
-        console.log("Successfully switched to: " + modelFile);
-    }, 50); 
+        // 4. Force the viewer to update its internal state
+        viewer.dismissPoster(); 
+        console.log("Loading: " + modelFile);
+    }, 100);
 }
-
-// 3. AR Error Handling remains the same
-const modelViewer = document.querySelector("#main-viewer");
-modelViewer.addEventListener('ar-status', (event) => {
-    if(event.detail.status === 'failed') {
-        console.error("AR failed to launch");
-    }
-});
