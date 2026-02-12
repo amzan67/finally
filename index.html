@@ -7,8 +7,6 @@
     <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
     <style>
         body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f9f9f9; color: #333; }
-        
-        /* Container to keep the AR button inside the viewer area */
         .viewer-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
         
         model-viewer { 
@@ -24,10 +22,6 @@
         button.category-btn:hover { background: #2ecc71; color: white; }
 
         #item-price { color: #2ecc71; font-weight: bold; font-size: 1.8rem; margin-top: 10px; }
-        #item-name { margin-bottom: 5px; }
-        #item-description { color: #666; font-style: italic; }
-
-        /* Custom AR Button Style */
         #ar-button {
             background-color: #2ecc71;
             color: white;
@@ -39,12 +33,7 @@
             padding: 12px 20px;
             font-size: 14px;
             font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            z-index: 10; /* Ensure it stays on top */
+            z-index: 10;
         }
     </style>
 </head>
@@ -54,24 +43,23 @@
     <h2 id="restaurant-name">Digital Menu Demo</h2>
 
     <div class="button-group">
-        <button class="category-btn" onclick="updateMenu('burger.glb', 'Classic Burger', 'A juicy beef patty with fresh lettuce and cheese.', 'PKR 400')">Burgers</button>
-        <button class="category-btn" onclick="updateMenu('donuts.glb', 'Donuts', '7 creamy Donuts', 'PKR 300')">Donuts</button>
+        <button class="category-btn" onclick="updateMenu('burger.glb', 'Classic Burger', 'A juicy beef patty.', 'PKR 400')">Burgers</button>
+        <button class="category-btn" onclick="updateMenu('pizza.glb', 'Fries', 'Crispy golden fries.', 'PKR 200')">Fries</button>
     </div>
 
     <div class="viewer-container">
         <model-viewer id="main-viewer" 
             src="burger.glb" 
             ar 
-            ar-modes="scene-viewer webxr quick-look" 
+            ar-modes="webxr scene-viewer quick-look" 
             ar-placement="floor"
             camera-controls 
             shadow-intensity="1" 
-            touch-action="pan-y"
-            alt="3D Food Menu">
+            environment-image="neutral"
+            exposure="1"
+            touch-action="pan-y">
             
-            <button slot="ar-button" id="ar-button">
-                👋 View in your Space
-            </button>
+            <button slot="ar-button" id="ar-button">👋 View in Space</button>
         </model-viewer>
     </div>
 
@@ -79,35 +67,32 @@
     <p id="item-description">A juicy beef patty with fresh lettuce and cheese.</p>
     <div id="item-price">PKR 400</div>
 
-    <br>
-    <button onclick="document.getElementById('main-viewer').cameraOrbit = '0deg 75deg auto'">Reset View</button>
-
     <script>
-        // 1. Function to switch items
         function updateMenu(modelFile, name, description, price) {
             const viewer = document.getElementById('main-viewer');
-            const nameElement = document.getElementById('item-name');
-            const descElement = document.getElementById('item-description');
-            const priceElement = document.getElementById('item-price');
+            
+            // 1. Clear the source first to prevent freezing
+            viewer.src = ""; 
 
-            viewer.setAttribute('src', modelFile);
-            nameElement.innerText = name;
-            descElement.innerText = description;
-            priceElement.innerText = price;
-
-            console.log("Switching to: " + modelFile);
+            // 2. Small delay to let the browser process the change
+            setTimeout(() => {
+                viewer.src = modelFile;
+                document.getElementById('item-name').innerText = name;
+                document.getElementById('item-description').innerText = description;
+                document.getElementById('item-price').innerText = price;
+            }, 50);
         }
 
-        // 2. AR Error Handling: This will tell you why the button vanishes
-        const modelViewer = document.querySelector("#main-viewer");
-        modelViewer.addEventListener('ar-status', (event) => {
-            if(event.detail.status === 'failed') {
-                alert("AR Error: Please ensure your phone is AR-compatible and you are using a modern browser like Chrome (Android) or Safari (iOS).");
+        // Listen for AR failures
+        const mv = document.querySelector("#main-viewer");
+        mv.addEventListener('ar-status', (event) => {
+            if (event.detail.status === 'failed') {
+                console.log("AR failed - background might turn black if permissions are denied.");
             }
         });
     </script>
-
 </body>
 </html>
+
 
 
