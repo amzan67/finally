@@ -1,9 +1,27 @@
-function changeItem(file, name, price) {
-    const viewer = document.querySelector('#menu-viewer');
-    const nameLabel = document.querySelector('#name');
-    const priceLabel = document.querySelector('#price');
+function updateMenu(modelFile, name, description, price) {
+    const viewer = document.getElementById('main-viewer');
+    const nameElement = document.getElementById('item-name');
+    const descElement = document.getElementById('item-description');
+    const priceElement = document.getElementById('item-price');
 
-    viewer.src = file;
-    nameLabel.innerText = name;
-    priceLabel.innerText = price;
+    // 1. Temporarily clear the source to prevent the "freeze"
+    viewer.src = ""; 
+
+    // 2. Use a tiny timeout to let the browser breathe before loading the new item
+    setTimeout(() => {
+        viewer.setAttribute('src', modelFile);
+        nameElement.innerText = name;
+        descElement.innerText = description;
+        priceElement.innerText = price;
+        
+        console.log("Successfully switched to: " + modelFile);
+    }, 50); 
 }
+
+// 3. AR Error Handling remains the same
+const modelViewer = document.querySelector("#main-viewer");
+modelViewer.addEventListener('ar-status', (event) => {
+    if(event.detail.status === 'failed') {
+        console.error("AR failed to launch");
+    }
+});
