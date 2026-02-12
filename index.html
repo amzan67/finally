@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Restaurant Menu | AR-STUDIOS.PK</title>
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 20px; background-color: #f9f9f9; color: #333; }
+        
+        /* Container to keep the AR button inside the viewer area */
+        .viewer-container { position: relative; width: 100%; max-width: 600px; margin: 0 auto; }
+        
+        model-viewer { 
+            width: 100%; 
+            height: 450px; 
+            background-color: #ffffff; 
+            border-radius: 20px; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .button-group { margin: 20px 0; }
+        button.category-btn { padding: 12px 25px; margin: 5px; cursor: pointer; border-radius: 25px; border: 2px solid #2ecc71; background: white; font-weight: bold; transition: 0.3s; }
+        button.category-btn:hover { background: #2ecc71; color: white; }
+
+        #item-price { color: #2ecc71; font-weight: bold; font-size: 1.8rem; margin-top: 10px; }
+        #item-name { margin-bottom: 5px; }
+        #item-description { color: #666; font-style: italic; }
+
+        /* Custom AR Button Style */
+        #ar-button {
+            background-color: #2ecc71;
+            color: white;
+            border-radius: 30px;
+            border: none;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>AR-STUDIOS.PK</h1>
+    <h2 id="restaurant-name">Digital Menu Demo</h2>
+
+    <div class="button-group">
+        <button class="category-btn" onclick="updateMenu('burger.glb', 'Classic Burger', 'A juicy beef patty with fresh lettuce and cheese.', 'PKR 400')">Burgers</button>
+        <button class="category-btn" onclick="updateMenu('pizza.glb', 'Fries', 'A standard plate of French Fries', 'PKR 200')">Fries</button>
+    </div>
+
+    <div class="viewer-container">
+        <model-viewer id="main-viewer" 
+            src="burger.glb" 
+            ar 
+            ar-modes="webxr scene-viewer quick-look" 
+            camera-controls 
+            shadow-intensity="1" 
+            touch-action="pan-y"
+            alt="3D Food Menu">
+            
+            <button slot="ar-button" id="ar-button">
+                👋 View in your Space
+            </button>
+        </model-viewer>
+    </div>
+
+    <h2 id="item-name">Classic Burger</h2>
+    <p id="item-description">A juicy beef patty with fresh lettuce and cheese.</p>
+    <div id="item-price">PKR 400</div>
+
+    <br>
+    <button onclick="document.getElementById('main-viewer').cameraOrbit = '0deg 75deg auto'">Reset View</button>
+
+    <script>
+        function updateMenu(modelFile, name, description, price) {
+            const viewer = document.getElementById('main-viewer');
+            const nameElement = document.getElementById('item-name');
+            const descElement = document.getElementById('item-description');
+            const priceElement = document.getElementById('item-price');
+
+            viewer.setAttribute('src', modelFile);
+            nameElement.innerText = name;
+            descElement.innerText = description;
+            priceElement.innerText = price;
+
+            console.log("Switching to: " + modelFile);
+        }
+    </script>
+
+</body>
+</html>
+
+
+

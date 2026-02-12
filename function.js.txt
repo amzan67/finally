@@ -1,0 +1,9 @@
+function changeItem(file, name, price) {
+    const viewer = document.querySelector('#menu-viewer');
+    const nameLabel = document.querySelector('#name');
+    const priceLabel = document.querySelector('#price');
+
+    viewer.src = file;
+    nameLabel.innerText = name;
+    priceLabel.innerText = price;
+}
