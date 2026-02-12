@@ -44,6 +44,7 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            z-index: 10; /* Ensure it stays on top */
         }
     </style>
 </head>
@@ -61,7 +62,8 @@
         <model-viewer id="main-viewer" 
             src="burger.glb" 
             ar 
-            ar-modes="webxr scene-viewer quick-look" 
+            ar-modes="scene-viewer webxr quick-look" 
+            ar-placement="floor"
             camera-controls 
             shadow-intensity="1" 
             touch-action="pan-y"
@@ -81,6 +83,7 @@
     <button onclick="document.getElementById('main-viewer').cameraOrbit = '0deg 75deg auto'">Reset View</button>
 
     <script>
+        // 1. Function to switch items
         function updateMenu(modelFile, name, description, price) {
             const viewer = document.getElementById('main-viewer');
             const nameElement = document.getElementById('item-name');
@@ -94,10 +97,16 @@
 
             console.log("Switching to: " + modelFile);
         }
+
+        // 2. AR Error Handling: This will tell you why the button vanishes
+        const modelViewer = document.querySelector("#main-viewer");
+        modelViewer.addEventListener('ar-status', (event) => {
+            if(event.detail.status === 'failed') {
+                alert("AR Error: Please ensure your phone is AR-compatible and you are using a modern browser like Chrome (Android) or Safari (iOS).");
+            }
+        });
     </script>
 
 </body>
 </html>
-
-
 
